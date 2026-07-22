@@ -1,0 +1,242 @@
+{
+  "Dr.Wash": {
+    "category": "laundry detergent and dishwash soap (FMCG, not appliances)",
+    "description": "Elevate your laundry routine with Dr. WASH where innovation meets gentle hygiene, ensuring a brilliant clean for every thread.",
+    "products": [
+      "Detergent Cake (250GM)",
+      "Detergent Powder (500G to 5KG, also 2.5KG box)",
+      "Dishwash Liquid (500ML, 1L Tamarind, 1L Citrus)",
+      "Liquid Detergent (2L, 3L front-top)",
+      "Bathing Bar (150GM)",
+      "Dishwash Soap Charcoal (110G, 200G-750G round)",
+      "Dishwash Pods",
+      "Handwash (300ML twin pack)"
+    ]
+  },
+  "Oliva": {
+    "category": "toilet/bathing soap (FMCG, not appliances)",
+    "description": "Oliva is a thoughtfully crafted toilet soap designed for gentle cleansing and a refreshing bathing experience.",
+    "products": [
+      "Oliva Soap (100GM)",
+      "Oliva Sandal Soap (100GM)"
+    ]
+  },
+  "Sun Plus": {
+    "category": "laundry detergent and home cleaning liquids (FMCG, not appliances)",
+    "description": "Feel the radiance with SUNPLUS — crafted to bring a burst of sunshine to your clothes, making every wash a delight.",
+    "products": [
+      "Dish Wash Liquid (1L, 5L)",
+      "Toilet Cleaner (1L, 5L)",
+      "Detergent Powder (500G to 10KG, incl. Matic, Aquamatic, Gold variants)",
+      "Hand Wash (300ML, 5L)",
+      "Floor Cleaner (1L)",
+      "Laundry Detergent (2L)",
+      "Detergent Cake (110GM)",
+      "Antibacterial Antiseptic Disinfectant (1L, 5L)",
+      "Liquid Detergent (1.5L, 5KG, pouch variants 1L-5L)",
+      "Fabric Softener (1L, 3L)",
+      "Abaya Wash (1L)",
+      "Bleach (2L)",
+      "Glass Cleaner (750ML, 1L, 5L)"
+    ]
+  },
+  "Gladys": {
+    "category": "bathing soap (FMCG, not appliances)",
+    "description": "Gladys offers a balanced bathing soap experience with mild cleansing and a pleasant, refreshing feel.",
+    "products": [
+      "Turmeric Soap (125GM)",
+      "Lavender Soap (125GM)",
+      "Lemon Soap (125GM)",
+      "Aloevera Soap (125GM)"
+    ]
+  },
+  "Lexus": {
+    "category": "skincare soap (FMCG, not appliances)",
+    "description": "Lexus is a skincare brand crafted to nourish, cleanse, and reveal your skin's natural radiance — unveiling a timeless glow through everyday care.",
+    "products": [
+      "Velvet Smooth / Velvet (100G, 125G)",
+      "Papaya (125G)",
+      "Turmeric (125G)",
+      "Lime (125G)",
+      "Peach (125G)",
+      "Creamy Perfection (125G)"
+    ]
+  },
+  "Dr.Care": {
+    "category": "home & surface cleaning liquids (FMCG, not appliances)",
+    "description": "Where care meets excellence. Redefine your routine with meticulously crafted products, ensuring a touch of wellness in every use.",
+    "products": [
+      "Dish Wash (250ML, 5L)",
+      "Phenoyl Combo / Phenoyl Green / Phenoyl Yellow (500ML, 1L)",
+      "Toilet Cleaner (500ML)",
+      "Surface Cleaner (500ML, 1L, 1+1 combo)",
+      "Soap Oil (5L)"
+    ]
+  },
+  "Speed XL": {
+    "category": "washing/stain-removal soap (FMCG, not appliances)",
+    "description": "Speed-XL is great for removing stains without discolouring clothes. Washing soap helps to keep your clothes fresh and shiny.",
+    "products": [
+      "Speed XL Washing Soap"
+    ]
+  },
+  "GOLD": {
+    "category": "washing soap bar (FMCG, not appliances)",
+    "description": "Gold 555 Laundry Soap Bar combines tough stain removal with gentle care for fabrics. Trust it to leave your clothes fresh, clean and brilliantly bright.",
+    "products": [
+      "Gold 555 Washing Soap"
+    ]
+  },
+  "Ezy Wash": {
+    "category": "dishwash soap (FMCG, not appliances)",
+    "description": "Transform your dishwashing experience with EZY WASH, where innovation meets effortless care, leaving every dish spotless and shining.",
+    "products": [
+      "Dishwashing Bar",
+      "Dish Wash (250G, 500G)"
+    ]
+  },
+  "Dr.White": {
+    "category": "laundry whitening detergent (FMCG, not appliances)",
+    "description": "Illuminate your wardrobe with our advanced Dr. White washing solutions, for brighter, whiter clothes that radiate freshness.",
+    "products": [
+      "Washing solutions for whiter clothes (details not yet available)"
+    ]
+  },
+  "Sparkle Bright": {
+    "category": "soap & home cleaning liquids (FMCG, not appliances)",
+    "description": "Experience Sparkle Bright's commitment to transform your spaces and personal care with superior cleaning solutions, creating a sparkling lifestyle.",
+    "products": [
+      "Toilet Soap (75GM)",
+      "Liquid Detergent",
+      "Detergent Powder",
+      "Dish Wash",
+      "Glass Cleaner (750ML)",
+      "Hand Wash (500ML, 1500ML)",
+      "Antiseptic Disinfectant Liquid (1500ML)",
+      "Toilet Cleaner (750ML)"
+    ]
+  },
+  "Super Wash": {
+    "category": "detergent & washing soap (FMCG, not appliances)",
+    "description": "Experience laundry luxury with SUPER WASH where excellence meets fabrics.",
+    "products": [
+      "Detergent Powder (500GM to 1KG)",
+      "Detergent Soap (150+10G, 250G)",
+      "Washing XL Bar",
+      "Washing Bar"
+    ]
+  },
+  "Gold-XL": {
+    "category": "washing bar soap (FMCG, not appliances)",
+    "description": "Experience powerful stain removal with Gold XL Washing Soap. Designed for excellence, it keeps your clothes fresh, clean and looking their best with every wash.",
+    "products": [
+      "Washing Bar Soap (450G, 1KG)"
+    ]
+  },
+  "Vi-Wash": {
+    "category": "laundry detergent (FMCG, not appliances)",
+    "description": "Redefine cleanliness with our expertly crafted laundry products, elevating fabrics to new levels of freshness for a revitalizing wash.",
+    "products": [
+      "Liquid Detergent (1L to 5L, pouch 1L, 2L)",
+      "Detergent Powder (500GM to 5KG, value pack, 3+3KG)",
+      "Detergent Cake (150G, 160GM)"
+    ]
+  },
+  "Orchid": {
+    "category": "bathing soap (FMCG, not appliances)",
+    "description": "Elevate Your Essence, Luxuriate in Radiance.",
+    "products": [
+      "Orchid Soap - Green (55G, 150G)",
+      "Orchid Soap - Blue (55G, 150G)"
+    ]
+  },
+  "Roz": {
+    "category": "beauty soap (FMCG, not appliances)",
+    "description": "Roz delivers gentle skincare designed to cleanse, nourish, and enhance your natural radiance every day effortlessly.",
+    "products": [
+      "Roz Beauty Bar - Red (55G)",
+      "Roz Beauty Bar - Blue (55G)"
+    ]
+  },
+  "Limon": {
+    "category": "toilet soap (FMCG, not appliances)",
+    "description": "Unveil the Zest of Elegance, Where Luxury Meets Luminosity.",
+    "products": [
+      "Limon Toilet Soap"
+    ]
+  },
+  "Iva": {
+    "category": "home cleaning & laundry products (FMCG, not appliances)",
+    "description": "Transform your surroundings with our innovative washing and cleaning solutions, ensuring a pristine touch that redefines freshness.",
+    "products": [
+      "Floor Cleaner (1L, 5L)",
+      "Fabric Softener",
+      "Dish Wash Liquid, Gel (500L+500L)",
+      "Dishwash Round (250G, 500G)",
+      "Dishwash Cake (75G, 110G)",
+      "Dishwash Bar (100G)",
+      "Detergent Powder",
+      "Glass Cleaner",
+      "Liquid Detergent (5L)",
+      "Toilet Soap",
+      "Toilet Cleaner",
+      "Scouring Powder (500G, 1KG)"
+    ]
+  },
+  "Zee": {
+    "category": "bathing soap (FMCG, not appliances)",
+    "description": "Experience the blooming freshness — soft skin that smells like a freshly picked bouquet.",
+    "products": [
+      "Creamy Milk (120GM)",
+      "Aqua Fresh (120GM)",
+      "Rose Magic (120GM)",
+      "Dahlia Delight (120GM)"
+    ]
+  },
+  "Victor Malabar": {
+    "category": "packaged food products — spices, condiments, staples (FMCG, not appliances)",
+    "description": "Savour the essence of Victor Malabar — where culinary mastery meets gourmet perfection, elevating your dining with exquisite flavours.",
+    "products": [
+      "Mixed Fruit Jam / Pineapple Jam (100G-500G)",
+      "Pathiri/Appam/Idiyappam Podi (500G-5KG)",
+      "Steamed Puttu Podi (500G-5KG)",
+      "Premium Tea / Thalamala Tea",
+      "Chilli Powder / Kashmiri Chilli Powder",
+      "Coriander Powder, Turmeric Powder",
+      "Sambar Powder, Fish/Chicken/Meat Masala",
+      "Curry Powder (250G-5KG)",
+      "Tomato Sauce, Green Chilli Sauce, Dark Sauce",
+      "Payasam Mix",
+      "Palakkadan Matta Rice (1KG)",
+      "Fennel, Fenugreek, Vinegar"
+    ]
+  },
+  "Auriga": {
+    "category": "IT peripherals & computer accessories (electronics, not FMCG)",
+    "description": "Auriga aims to bring about revolutionary changes in the field of IT infrastructure through the best technology. Auriga Technologies ensures state-of-the-art IT solutions and computer peripherals for your digital needs.",
+    "products": [
+      "SSD (256GB)",
+      "Mouse (wired & wireless, multiple models)",
+      "Keyboard (wired & wireless, multiple models)",
+      "Keyboard & Mouse Combos",
+      "Network Cable (Cat 6)"
+    ]
+  },
+  "Nako Premium": {
+    "category": "home appliances & kitchenware (durable goods, not FMCG soap/detergent)",
+    "description": "NAKO is our home appliance brand, focused on making daily life easier and more convenient.",
+    "products": [
+      "Hot Pot (Steel, 1500-5000ML)",
+      "Electric Kettle",
+      "Iron Box (multiple models)",
+      "Puttu Kudam / Puttu Maker / Chiratta Puttu Maker",
+      "Saucepan, Kadai, Fry Pan (Triply Steel range)",
+      "Pressure Cooker (3L, 5L)",
+      "Gas Stove (2-burner, 3-burner)",
+      "Non-Stick Tawa (6-piece set)",
+      "Biriyani Pot",
+      "Appachatty",
+      "Induction Cooker (button & touch)"
+    ]
+  }
+}

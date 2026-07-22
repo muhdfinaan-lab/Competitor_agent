@@ -1,0 +1,10 @@
+streamlit
+pandas
+requests
+beautifulsoup4
+ddgs
+groq
+python-dotenv
+schedule
+matplotlib
+seaborn
