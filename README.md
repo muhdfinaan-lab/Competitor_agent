@@ -28,10 +28,6 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-## Demo
-
- Full walkthrough: [link to your LinkedIn post/video]
-
 ---
 
 Built by [Muhammed Finan P C](https://linkedin.com/in/muhd-finan)
