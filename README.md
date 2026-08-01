@@ -1,6 +1,6 @@
 #  Competitive Intelligence Agent
 
-An AI agent that discovers competitors, pulls live market data, and generates actionable business advice — built in 48 hours for an interview challenge from **Team Thai**.
+An AI agent that discovers competitors, pulls live market data, and generates actionable business advice — built in 2 days for an interview challenge from **Team Thai**.
 
 **The brief:** No physical surveys. Only public online data. Refreshed daily. Real, actionable advice — not just raw data.
 
@@ -14,7 +14,7 @@ An AI agent that discovers competitors, pulls live market data, and generates ac
 
 ## Tech Stack
 
-Python · Streamlit · Groq (Llama 3.1) · Live web search · Pandas · Matplotlib/Seaborn — 100% free-tier.
+Python · Streamlit · Groq (Llama 3.1) · Live web search through DuckDuckgo · Pandas · Matplotlib/Seaborn — 100% free-tier.
 
 ## The real story
 
