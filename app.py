@@ -16,7 +16,22 @@ def load_catalog():
 catalog = load_catalog()
 
 load_dotenv()
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+
+if not GROQ_API_KEY:
+    st.error("GROQ_API_KEY is missing.")
+    st.stop()
+
+client = Groq(api_key=GROQ_API_KEY)
+
+# Check available Groq models
+try:
+    available_models = [m.id for m in client.models.list().data]
+    st.write("Available Groq models:", available_models)
+except Exception as e:
+    st.error(f"Could not list Groq models: {e}")
+    st.stop()
 
 sns.set_style("whitegrid")
 
