@@ -17,21 +17,141 @@ catalog = load_catalog()
 
 load_dotenv()
 
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+# Groq configuration.
+# The app verifies the model is available for the current API key.
+GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
 
-if not GROQ_API_KEY:
-    st.error("GROQ_API_KEY is missing.")
-    st.stop()
 
-client = Groq(api_key=GROQ_API_KEY)
+def get_groq_api_key():
+    """Read the Groq API key from Streamlit Secrets first, then environment."""
+    try:
+        key = st.secrets.get("GROQ_API_KEY")
+    except Exception:
+        key = None
 
-# Check available Groq models
-try:
-    available_models = [m.id for m in client.models.list().data]
-    st.write("Available Groq models:", available_models)
-except Exception as e:
-    st.error(f"Could not list Groq models: {e}")
-    st.stop()
+    return key or os.getenv("GROQ_API_KEY")
+
+
+def initialize_groq():
+    api_key = get_groq_api_key()
+
+    if not api_key:
+        st.error(
+            "GROQ_API_KEY is missing. Add it to Streamlit Secrets "
+            "or your environment variables."
+        )
+        st.stop()
+
+    try:
+        groq_client = Groq(api_key=api_key)
+
+        available_models = {
+            model.id for model in groq_client.models.list().data
+        }
+
+        if GROQ_MODEL in available_models:
+            selected_model = GROQ_MODEL
+        else:
+            fallback_models = [
+                "llama-3.1-8b-instant",
+                "openai/gpt-oss-20b",
+                "openai/gpt-oss-120b",
+                "llama-3.3-70b-versatile",
+            ]
+
+            selected_model = next(
+                (
+                    model
+                    for model in fallback_models
+                    if model in available_models
+                ),
+                None,
+            )
+
+            if not selected_model:
+                st.error(
+                    "No usable Groq chat model is available for this API key."
+                )
+
+                with st.expander("Models available to this API key"):
+                    st.code(
+                        "\n".join(sorted(available_models))
+                        or "No models returned"
+                    )
+
+                st.stop()
+
+            st.warning(
+                f"'{GROQ_MODEL}' is unavailable. "
+                f"Using '{selected_model}' instead."
+            )
+
+        return groq_client, selected_model
+
+    except Exception as exc:
+        status_code = getattr(exc, "status_code", None)
+
+        if status_code == 401:
+            st.error(
+                "Groq authentication failed. "
+                "Check your GROQ_API_KEY."
+            )
+        elif status_code == 403:
+            st.error(
+                "Groq denied access to the selected model. "
+                "Check your project/model permissions."
+            )
+        else:
+            st.error(
+                f"Could not initialize Groq: "
+                f"{type(exc).__name__}: {exc}"
+            )
+
+        st.stop()
+
+
+client, ACTIVE_GROQ_MODEL = initialize_groq()
+
+
+def groq_chat(messages, temperature=0.2):
+    """Safely call Groq and display a useful error instead of crashing."""
+    try:
+        return client.chat.completions.create(
+            model=ACTIVE_GROQ_MODEL,
+            messages=messages,
+            temperature=temperature,
+        )
+
+    except Exception as exc:
+        status_code = getattr(exc, "status_code", None)
+
+        if status_code == 401:
+            st.error("Groq authentication failed. Check your API key.")
+
+        elif status_code == 403:
+            st.error(
+                f"Access denied for Groq model "
+                f"'{ACTIVE_GROQ_MODEL}'. Check model permissions."
+            )
+
+        elif status_code == 404:
+            st.error(
+                f"Groq could not find model "
+                f"'{ACTIVE_GROQ_MODEL}'. "
+                "The model may not be available to this project."
+            )
+
+        elif status_code == 429:
+            st.error(
+                "Groq rate limit reached. Please wait and try again."
+            )
+
+        else:
+            st.error(
+                f"Groq request failed: {type(exc).__name__}: {exc}"
+            )
+
+        return None
 
 sns.set_style("whitegrid")
 
