@@ -5,7 +5,6 @@ import os
 import matplotlib.pyplot as plt
 import seaborn as sns
 from ddgs import DDGS
-from openai import OpenAI
 from dotenv import load_dotenv
 import json
 from groq import Groq
