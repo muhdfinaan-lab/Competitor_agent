@@ -446,11 +446,14 @@ Provide a structured report:
 
 Keep it concise and business-focused."""
 
-    response = client.chat.completions.create(
-        model="llama-3.1-8b-instant",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.3,
+    response = groq_chat(
+    [{"role": "user", "content": prompt}],
+    temperature=0.3
     )
+
+    if response is None:
+        return "Unable to generate the report because the Groq request failed."
+
     return response.choices[0].message.content
 
 # ---------- Streamlit Interface ----------
