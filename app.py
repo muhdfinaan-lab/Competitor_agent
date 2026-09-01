@@ -336,125 +336,370 @@ def discover_competitors(brand_name, specific_product, category, region):
     ]
 
     raw_results = []
+
+    # -----------------------------
+    # Collect web search results
+    # -----------------------------
     try:
         with DDGS() as ddgs:
             for q in queries:
-                raw_results.extend([r.get("body", "") for r in ddgs.text(q, max_results=5)])
-    except Exception:
-        pass
+                try:
+                    results = ddgs.text(q, max_results=5)
+
+                    for r in results:
+                        body = r.get("body", "").strip()
+
+                        if body:
+                            raw_results.append(body)
+
+                except Exception:
+                    continue
+
+    except Exception as e:
+        st.warning(
+            f"Web search failed: {type(e).__name__}"
+        )
+
+    # Remove duplicate search results
+    raw_results = list(dict.fromkeys(raw_results))
 
     combined_text = "\n".join(raw_results)
 
-    prompt = f"""Based on the following search results, list ONLY real 
-FMCG BRAND NAMES that make {category} PRODUCTS and are sold/available in 
-{region}, NOT appliance/electronics brands.
+    # -----------------------------
+    # Stop if no search data
+    # -----------------------------
+    if not combined_text.strip():
+        st.warning(
+            "No web search results were found. "
+            "Competitor discovery could not be completed."
+        )
+        return []
 
-CRITICAL: Do NOT include "{brand_name}" itself, or any close variation of 
-its name, in the list.
+    # Limit prompt size
+    combined_text = combined_text[:12000]
 
-Search results:
+    # -----------------------------
+    # Groq prompt
+    # -----------------------------
+    prompt = f"""
+You are an FMCG competitive intelligence analyst.
+
+Based ONLY on the search results below, identify real FMCG brands
+that sell products in the requested category and region.
+
+Brand being analyzed:
+{brand_name}
+
+Specific product:
+{specific_product}
+
+Category:
+{category}
+
+Region:
+{region}
+
+STRICT RULES:
+
+1. Return ONLY real FMCG BRAND NAMES.
+2. Brands must sell products in the "{category}" category.
+3. Brands must be available or sold in "{region}".
+4. Do NOT include appliance or electronics brands.
+5. Do NOT include finance companies.
+6. Do NOT include marketplaces or delivery platforms.
+7. Do NOT include "{brand_name}".
+8. Do NOT include spelling variations or close variations of "{brand_name}".
+9. Do NOT return product names.
+10. Do NOT invent brands that are not supported by the search results.
+11. Return 6-8 competitors if enough valid brands exist.
+12. If fewer than 6 valid competitors are supported, return only those valid competitors.
+13. Return ONLY a comma-separated list.
+14. Do not add explanations, numbering, bullets, or sentences.
+
+SEARCH RESULTS:
 {combined_text}
+"""
 
-Return ONLY a comma-separated list of 6-8 real FMCG competitor brand names, 
-nothing else."""
-
-    response = client.chat.completions.create(
-        model="llama-3.1-8b-instant",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.1,
+    # -----------------------------
+    # Safe Groq call
+    # -----------------------------
+    response = groq_chat(
+        messages=[
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ],
+        temperature=0.1
     )
-    raw_output = response.choices[0].message.content.strip()
-    raw_output = clean_llm_output(raw_output)
-    raw_list = [c.strip() for c in raw_output.split(",")] if raw_output else []
 
+    # Groq failed
+    if response is None:
+        return []
+
+    # -----------------------------
+    # Read Groq response
+    # -----------------------------
+    try:
+        raw_output = response.choices[0].message.content or ""
+        raw_output = raw_output.strip()
+
+    except (AttributeError, IndexError, TypeError):
+        st.warning("Groq returned an unexpected response.")
+        return []
+
+    raw_output = clean_llm_output(raw_output)
+
+    if not raw_output:
+        return []
+
+    raw_list = [
+        c.strip()
+        for c in raw_output.split(",")
+        if c.strip()
+    ]
+
+    # -----------------------------
+    # Normalize names
+    # -----------------------------
     def normalize(s):
-        return "".join(ch for ch in (s or "").lower() if ch.isalnum())
+        return "".join(
+            ch for ch in (s or "").lower()
+            if ch.isalnum()
+        )
 
     brand_norm = normalize(brand_name)
-    BLOCKLIST = ["LG", "Samsung", "Bosch", "Whirlpool", "IFB", "Godrej Appliances",
-                 "Bajaj Finance", "Voltas", "Haier", "Milma", "Amway India",
-                 "Blinkit", "Zepto", "Swiggy Instamart", "Amazon", "Flipkart", "BigBasket"]
-    blockset = set(normalize(x) for x in BLOCKLIST)
 
+    BLOCKLIST = [
+        "LG",
+        "Samsung",
+        "Bosch",
+        "Whirlpool",
+        "IFB",
+        "Godrej Appliances",
+        "Bajaj Finance",
+        "Voltas",
+        "Haier",
+        "Milma",
+        "Amway India",
+        "Blinkit",
+        "Zepto",
+        "Swiggy Instamart",
+        "Amazon",
+        "Flipkart",
+        "BigBasket",
+    ]
+
+    blockset = {
+        normalize(x)
+        for x in BLOCKLIST
+    }
+
+    # -----------------------------
+    # Filter competitors
+    # -----------------------------
     filtered = []
-    for c in raw_list:
-        if not c:
+    seen = set()
+
+    for competitor in raw_list:
+
+        competitor = competitor.strip()
+
+        if not competitor:
             continue
-        n = normalize(c)
-        if n == brand_norm or n in blockset:
+
+        normalized = normalize(competitor)
+
+        if not normalized:
             continue
-        filtered.append(c)
+
+        # Remove Team Thai / selected brand
+        if normalized == brand_norm:
+            continue
+
+        # Remove blocked companies
+        if normalized in blockset:
+            continue
+
+        # Remove duplicates
+        if normalized in seen:
+            continue
+
+        seen.add(normalized)
+        filtered.append(competitor)
 
     return filtered[:8]
 
 
 def format_data_clearly(rows, teamthai_brand):
     lines = []
+
     for row in rows:
-        label = "[TEAM THAI'S OWN PRODUCT]" if row.get("is_teamthai", False) else "[COMPETITOR PRODUCT]"
-        lines.append(f"{label} {row.get('product','')} | Region: {row.get('region','')} | "
-                      f"{row.get('title','')} | {row.get('snippet','')}")
+        label = (
+            "[TEAM THAI'S OWN PRODUCT]"
+            if row.get("is_teamthai", False)
+            else "[COMPETITOR PRODUCT]"
+        )
+
+        lines.append(
+            f"{label} "
+            f"{row.get('product', '')} | "
+            f"Region: {row.get('region', '')} | "
+            f"{row.get('title', '')} | "
+            f"{row.get('snippet', '')}"
+        )
+
     return "\n".join(lines)
 
 
-def generate_report(rows, teamthai_brand, category, known_facts="", product_count=0, region=""):
-    data_summary = format_data_clearly(rows, teamthai_brand)[:8000]
+def generate_report(
+    rows,
+    teamthai_brand,
+    category,
+    known_facts="",
+    product_count=0,
+    region=""
+):
+    data_summary = format_data_clearly(
+        rows,
+        teamthai_brand
+    )[:8000]
 
     facts_block = ""
+
     if known_facts.strip():
         facts_block = f"""
 === VERIFIED GROUND TRUTH ABOUT {teamthai_brand} (DO NOT CONTRADICT) ===
 {known_facts}
 
-FACT: {teamthai_brand} currently has {product_count} distinct product 
-variants already in its lineup. This is a WIDE/ESTABLISHED range, not a 
-narrow one. NEVER describe {teamthai_brand}'s product range as "limited," 
-"narrow," or suggest it "only" has one or two products — that directly 
-contradicts this verified fact.
+FACT: {teamthai_brand} currently has {product_count} distinct product
+variants already in its lineup.
+
+This is a WIDE/ESTABLISHED range, not a narrow one.
+
+NEVER describe {teamthai_brand}'s product range as:
+- limited
+- narrow
+- having only one or two products
+
+That would contradict the verified ground truth.
+
 === END VERIFIED GROUND TRUTH ===
 
-RULE: Before writing ANY claim about what {teamthai_brand} does or doesn't 
-offer, check it against the VERIFIED GROUND TRUTH above. This ground 
-truth always overrides anything implied by search snippets.
+RULE:
+Before writing ANY claim about what {teamthai_brand}
+does or does not offer, check it against the VERIFIED
+GROUND TRUTH above.
+
+The verified ground truth always overrides anything
+implied by search snippets.
 """
 
-    prompt = f"""You are a senior FMCG market analyst working for Team Thai, 
-analyzing the {region} market. Team Thai's OWN brand here is: {teamthai_brand} 
-({category}).
+    prompt = f"""
+You are a senior FMCG market analyst working for Team Thai.
+
+Market:
+{region}
+
+Team Thai brand:
+{teamthai_brand}
+
+Category:
+{category}
+
 {facts_block}
-Each line below is labeled "[TEAM THAI'S OWN PRODUCT]" or 
-"[COMPETITOR PRODUCT]" — trust these labels exactly.
+
+Each line below is labeled either:
+
+[TEAM THAI'S OWN PRODUCT]
+
+or
+
+[COMPETITOR PRODUCT]
+
+Trust these labels exactly.
 
 IGNORE any data unrelated to {category} products in {region}.
 
 DATA:
 {data_summary}
 
-IMPORTANT: Advice must help Team Thai compete against and outperform 
-rivals — never suggest partnering with, merging with, or collaborating 
-with a competing manufacturer. Also disregard generic DIY/tutorial content 
-that isn't about the specific brands being compared — focus only on 
-commercial products, pricing, and brand positioning.
+IMPORTANT:
+
+Your advice must help Team Thai compete against and
+outperform rivals.
+
+Never suggest:
+- partnering with competitors
+- merging with competitors
+- collaborating with competing manufacturers
+
+Ignore generic DIY/tutorial content that is not about
+the specific commercial brands being compared.
+
+Focus on:
+- commercial products
+- pricing
+- brand positioning
+- competitive strengths
+- competitive weaknesses
+- actionable opportunities
 
 Provide a structured report:
-1. KEY FINDINGS (3-4 bullets)
-2. COMPETITIVE GAPS (must be consistent with the verified ground truth — 
-   do not claim a product is missing if ground truth says it exists)
-3. ACTIONABLE ADVICE (specific, practical steps to beat competitors — 
-   must not repeat something Team Thai already has, per ground truth)
-4. CONFIDENCE NOTE (data limitations, what needs human verification)
 
-Keep it concise and business-focused."""
+1. KEY FINDINGS
+3-4 concise bullets.
 
+2. COMPETITIVE GAPS
+Identify genuine gaps only.
+Do NOT claim Team Thai is missing a product if the
+verified ground truth says Team Thai already has it.
+
+3. ACTIONABLE ADVICE
+Give specific and practical steps Team Thai can take
+to compete against rivals.
+
+Do NOT recommend something Team Thai already has,
+according to the verified ground truth.
+
+4. CONFIDENCE NOTE
+Explain data limitations and what should be
+human-verified.
+
+Keep the report concise and business-focused.
+"""
+
+    # -----------------------------
+    # Safe Groq call
+    # -----------------------------
     response = groq_chat(
-    [{"role": "user", "content": prompt}],
-    temperature=0.3
+        messages=[
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ],
+        temperature=0.3
     )
 
     if response is None:
-        return "Unable to generate the report because the Groq request failed."
+        return (
+            "Unable to generate the report because "
+            "the Groq request failed. "
+            "Please check your Groq API key, model access, "
+            "or rate limit and try again."
+        )
 
-    return response.choices[0].message.content
+    try:
+        report = response.choices[0].message.content or ""
+
+        return report.strip()
+
+    except (AttributeError, IndexError, TypeError):
+        return (
+            "Groq returned an unexpected response "
+            "while generating the report."
+        )
 
 # ---------- Streamlit Interface ----------
 
