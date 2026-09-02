@@ -27,6 +27,7 @@ pip install -r requirements.txt
 # add your GROQ_API_KEY to a .env file
 streamlit run app.py
 ```
+Demo : https://competitoragent-ttxwq4vszb6cyaxnjjj7mm.streamlit.app/
 
 ---
 
